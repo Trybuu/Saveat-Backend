@@ -1,0 +1,27 @@
+{
+  "name": "saveat-backend",
+  "version": "1.0.0",
+  "description": "Saveat - oszczędzaj żywność i pieniądze.",
+  "main": "index.js",
+  "scripts": {
+    "start:dev": "nodemon --exec ts-node src/index.ts",
+    "start:prod": "node dist/index.js",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Marek Trybuła",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "morgan": "^1.10.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.8.1",
+    "eslint": "^9.38.0",
+    "prettier": "^3.6.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
