@@ -9,6 +9,7 @@ import statRouter from './routes/statRoutes'
 import recipeRouter from './routes/recipeRoutes'
 import articleRouter from './routes/articleRoutes'
 import adRouter from './routes/adRoutes'
+import mongoose from 'mongoose'
 
 const app = express()
 
@@ -25,6 +26,27 @@ app.use('/api/v1/ads', adRouter)
 app.use('/api/v1/stats', statRouter)
 
 const port = config.port
+
+if (!config.dbConnectionString || !config.dbUser || !config.dbPassword) {
+  throw new Error('Database connection data is not defined!')
+}
+
+const connectionString = config.dbConnectionString
+  .replace('<USER>', config.dbUser)
+  .replace('<PASSWORD>', config.dbPassword)
+
+mongoose
+  .connect(connectionString, {
+    retryWrites: true,
+    maxPoolSize: 10,
+    serverSelectionTimeoutMS: 5000,
+  })
+  .then(() => {
+    console.log('Server connected to the Database succesfully')
+  })
+  .catch((err) => {
+    console.log('Server could not connect to the DB: ', err)
+  })
 
 app.listen(port, () => {
   console.log(`Server running ${config.nodeEnv} mode on port ${port}`)
