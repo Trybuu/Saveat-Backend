@@ -6,10 +6,14 @@ import {
   updateUser,
   deleteUser,
 } from '../controllers/userController'
+import { signup, login } from '../controllers/authController'
+
 const router = Router()
 
-router.route('/').get(getUsers).post(createUser)
+router.post('/signup', signup)
+router.post('/login', login)
 
+router.route('/').get(getUsers).post(createUser)
 router.route('/:id').get(getUser).patch(updateUser).delete(deleteUser)
 
 export default router
