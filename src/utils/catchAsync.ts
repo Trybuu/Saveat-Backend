@@ -8,7 +8,7 @@ const catchAsync = <
   fn: (req: Req, res: Res, next: NextFunction) => Promise<T>,
 ) => {
   return (req: Req, res: Res, next: NextFunction): void => {
-    fn(req, res, next).catch(next)
+    fn(req, res, next).catch((err) => next(err))
   }
 }
 
