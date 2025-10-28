@@ -10,6 +10,7 @@ import recipeRouter from './routes/recipeRoutes'
 import articleRouter from './routes/articleRoutes'
 import adRouter from './routes/adRoutes'
 import mongoose from 'mongoose'
+import globalErrorHandler from './controllers/errorController'
 
 const app = express()
 
@@ -47,6 +48,8 @@ mongoose
   .catch((err) => {
     console.log('Server could not connect to the DB: ', err)
   })
+
+app.use(globalErrorHandler)
 
 app.listen(port, () => {
   console.log(`Server running ${config.nodeEnv} mode on port ${port}`)

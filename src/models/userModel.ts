@@ -22,10 +22,12 @@ const userSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>({
   firstName: {
     type: String,
     required: [true, 'User name is required.'],
+    minlength: [2, 'User name must have at least 2 characters.'],
   },
   lastName: {
     type: String,
     required: [true, 'User last name is required.'],
+    minlength: [2, 'User last name must have at least 2 characters.'],
   },
   email: {
     type: String,
