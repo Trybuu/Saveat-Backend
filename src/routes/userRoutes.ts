@@ -1,7 +1,6 @@
 import { Router } from 'express'
 import {
   getUsers,
-  createUser,
   getUser,
   updateUser,
   deleteUser,
@@ -21,7 +20,7 @@ router.post('/login', login)
 router.post('/forgotPassword', forgotPassword)
 router.patch('/resetPassword/:token', resetPassword)
 
-router.route('/').get(getUsers).post(createUser)
+router.route('/').get(getUsers)
 router.route('/:id').get(getUser).patch(updateUser).delete(deleteUser)
 
 export default router

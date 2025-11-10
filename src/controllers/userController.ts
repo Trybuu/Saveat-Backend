@@ -1,43 +1,77 @@
 import { Request, Response } from 'express'
+import User from '../models/userModel'
+import catchAsync from '../utils/catchAsync'
+import AppError from '../utils/appError'
+import mongoose from 'mongoose'
 
-export const getUsers = (req: Request, res: Response) => {
+export const getUsers = catchAsync(async (req: Request, res: Response) => {
+  const users = await User.find()
+
   res.status(200).json({
     status: 'success',
     message: 'Users fetched',
-    data: '<USERS DATA>',
+    data: {
+      users,
+    },
   })
-}
+})
 
-export const getUser = (req: Request, res: Response) => {
+export const getUser = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.params.id
+
+  if (!mongoose.Types.ObjectId.isValid(userId))
+    throw new AppError('Invaid user ID format', 400)
+
+  const user = await User.findById(userId)
+
+  if (!user) throw new AppError('User not found', 404)
+
   res.status(200).json({
     status: 'success',
     message: 'User fetched',
-    data: '<USER DATA>',
+    data: {
+      user,
+    },
   })
-}
+})
 
-export const createUser = (req: Request, res: Response) => {
-  // Middleware który sprawdza dane
+export const updateUser = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.params.id
 
-  res.status(201).json({
-    status: 'success',
-    message: 'User added',
-    data: '<USER DATA>',
-  })
-}
+  if (!mongoose.Types.ObjectId.isValid(userId))
+    throw new AppError('Invalid user ID format', 400)
 
-export const updateUser = (req: Request, res: Response) => {
+  const { email, firstName, lastName } = req.body
+
+  const user = await User.findByIdAndUpdate(
+    userId,
+    { email, firstName, lastName },
+    { new: true, runValidators: true },
+  )
+
+  if (!user) throw new AppError('User not found', 404)
+
   res.status(200).json({
     status: 'success',
     message: 'User updated',
-    data: '<UPDATED USER DATA',
+    data: {
+      user,
+    },
   })
-}
+})
 
-export const deleteUser = (req: Request, res: Response) => {
+export const deleteUser = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.params.id
+
+  if (!mongoose.Types.ObjectId.isValid(userId))
+    throw new AppError('Invalid user ID format', 400)
+
+  const user = await User.findByIdAndDelete(userId)
+
+  if (!user) throw new AppError('User not found', 404)
+
   res.status(204).json({
     status: 'success',
     message: 'User deleted',
-    data: null,
   })
-}
+})
