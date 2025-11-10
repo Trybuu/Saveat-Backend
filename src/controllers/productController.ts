@@ -3,11 +3,12 @@ import Product from '../models/productModel'
 
 export const getProducts = async (req: Request, res: Response) => {
   try {
-    const products = await Product.find().limit(100)
+    const limit = 25
+    const products = await Product.find().limit(limit)
 
     res.status(200).json({
       status: 'success',
-      message: '100 products fetched',
+      message: `${limit} products fetched`,
       data: {
         products,
       },
