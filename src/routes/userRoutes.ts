@@ -10,6 +10,7 @@ import {
   login,
   forgotPassword,
   resetPassword,
+  protect,
 } from '../controllers/authController'
 
 const router = Router()
@@ -20,7 +21,11 @@ router.post('/login', login)
 router.post('/forgotPassword', forgotPassword)
 router.patch('/resetPassword/:token', resetPassword)
 
-router.route('/').get(getUsers)
-router.route('/:id').get(getUser).patch(updateUser).delete(deleteUser)
+router.route('/').get(protect, getUsers)
+router
+  .route('/:id')
+  .get(protect, getUser)
+  .patch(protect, updateUser)
+  .delete(protect, deleteUser)
 
 export default router

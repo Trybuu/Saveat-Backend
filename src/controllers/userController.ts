@@ -5,13 +5,25 @@ import AppError from '../utils/appError'
 import mongoose from 'mongoose'
 
 export const getUsers = catchAsync(async (req: Request, res: Response) => {
-  const users = await User.find()
+  const [limit, skip] = [Number(req.query.limit), Number(req.query.skip)]
+  const safeLimit = !isNaN(limit) && limit > 0 ? limit : 10
+  const safeSkip = !isNaN(skip) && skip >= 0 ? skip : 0
+
+  const users = await User.find().limit(safeLimit).skip(safeSkip)
+
+  const total = await User.countDocuments()
 
   res.status(200).json({
     status: 'success',
     message: 'Users fetched',
     data: {
       users,
+    },
+    pagination: {
+      total,
+      limit: safeLimit,
+      skip: safeSkip,
+      hasMore: safeSkip + safeLimit < total,
     },
   })
 })
