@@ -1,5 +1,13 @@
 import express from 'express'
+import mongoose from 'mongoose'
+import rateLimit from 'express-rate-limit'
+import helmet from 'helmet'
+import mongoSanitize from 'express-mongo-sanitize'
+import { xss } from 'express-xss-sanitizer'
+import hpp from 'hpp'
+
 import config from './config/config'
+import globalErrorHandler from './controllers/errorController'
 import userRouter from './routes/userRoutes'
 import productRouter from './routes/productRoutes'
 import pantryRouter from './routes/pantryRoutes'
@@ -9,12 +17,26 @@ import statRouter from './routes/statRoutes'
 import recipeRouter from './routes/recipeRoutes'
 import articleRouter from './routes/articleRoutes'
 import adRouter from './routes/adRoutes'
-import mongoose from 'mongoose'
-import globalErrorHandler from './controllers/errorController'
+
+const limiter = rateLimit({
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message: 'To many requets from this Ip. try again later.',
+})
 
 const app = express()
 
-app.use(express.json())
+app.use(helmet())
+app.use(express.json({ limit: '10kb' }))
+
+app.use(mongoSanitize())
+app.use(xss())
+app.use(
+  hpp({
+    whitelist: ['duration'],
+  }),
+)
+app.use('/api', limiter)
 
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/products', productRouter)
