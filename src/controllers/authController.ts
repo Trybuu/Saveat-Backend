@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import crypto from 'crypto'
 import jwt, { SignOptions } from 'jsonwebtoken'
-import { IUser } from '../types/user'
+import { IUser, IUserRole } from '../types/user'
 import catchAsync from '../utils/catchAsync'
 import AppError from '../utils/appError'
 import { JWTPayload } from '../types/auth'
@@ -109,22 +109,22 @@ export const protect = catchAsync(
   },
 )
 
-// export const restrictTo = (...roles: IUserRoles[]) => {
-//   return async (req: Request, res: Response, next: NextFunction) => {
-//     if (!req.user) {
-//       return next(
-//         new AppError('You are not logged in. Log in and try again', 403),
-//       )
-//     }
-//     if (!roles.includes(req.user.role)) {
-//       return next(
-//         new AppError('You do not have permission to perform this action', 403),
-//       )
-//     }
+export const restrictTo = (...roles: IUserRole[]) => {
+  return async (req: any, res: Response, next: NextFunction) => {
+    if (!req.user) {
+      return next(
+        new AppError('You are not logged in. Log in and try again', 403),
+      )
+    }
+    if (!roles.includes(req.user.role)) {
+      return next(
+        new AppError('You do not have permission to perform this action', 403),
+      )
+    }
 
-//     next()
-//   }
-// }
+    next()
+  }
+}
 
 export const forgotPassword = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {

@@ -87,3 +87,13 @@ export const deleteUser = catchAsync(async (req: Request, res: Response) => {
     message: 'User deleted',
   })
 })
+
+export const deleteMe = catchAsync(async (req: any, res: Response) => {
+  await User.findByIdAndUpdate(req.user.id, { active: false })
+
+  res.status(204).json({
+    status: 'success',
+    message: 'Account deleted successfully',
+    data: null,
+  })
+})

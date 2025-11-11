@@ -4,6 +4,7 @@ import {
   getUser,
   updateUser,
   deleteUser,
+  deleteMe,
 } from '../controllers/userController'
 import {
   signup,
@@ -11,6 +12,7 @@ import {
   forgotPassword,
   resetPassword,
   protect,
+  restrictTo,
 } from '../controllers/authController'
 
 const router = Router()
@@ -21,11 +23,15 @@ router.post('/login', login)
 router.post('/forgotPassword', forgotPassword)
 router.patch('/resetPassword/:token', resetPassword)
 
-router.route('/').get(protect, getUsers)
+router.delete('/deleteMe', protect, deleteMe)
+
+router
+  .route('/')
+  .get(protect, restrictTo('user', 'admin', 'moderator'), getUsers)
 router
   .route('/:id')
-  .get(protect, getUser)
-  .patch(protect, updateUser)
-  .delete(protect, deleteUser)
+  .get(protect, restrictTo('user', 'admin', 'moderator'), getUser)
+  .patch(protect, restrictTo('admin'), updateUser)
+  .delete(protect, restrictTo('admin'), deleteUser)
 
 export default router

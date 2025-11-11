@@ -53,6 +53,10 @@ const userSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>({
   passwordResetExpires: {
     type: Date,
   },
+  active: {
+    type: Boolean,
+    default: true,
+  },
 })
 
 userSchema.pre('save', async function (next) {
@@ -68,6 +72,11 @@ userSchema.pre('save', async function (next) {
   if (!this.isModified('password') || this.isNew) return next()
 
   this.passwordChangedAt = new Date(Date.now() - 1000)
+  next()
+})
+
+userSchema.pre(/^find/, function (this: mongoose.Query<any, any>, next) {
+  this.where({ active: { $ne: false } })
   next()
 })
 

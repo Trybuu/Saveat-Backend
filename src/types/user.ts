@@ -1,12 +1,12 @@
 import { Model } from 'mongoose'
 
-export type IUserRoles = 'user' | 'moderator' | 'admin'
+export type IUserRole = 'user' | 'moderator' | 'admin'
 
 export interface IUser {
   firstName: string
   lastName: string
   email: string
-  role: IUserRoles
+  role: IUserRole
   password: string
   confirmPassword?: string
   accountVerified: boolean
@@ -14,6 +14,7 @@ export interface IUser {
   passwordChangedAt?: Date
   passwordResetToken?: string
   passwordResetExpires?: Date
+  active: boolean
 }
 
 export interface IUserMethods {
