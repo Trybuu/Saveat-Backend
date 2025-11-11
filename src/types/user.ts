@@ -1,8 +1,9 @@
-import { Model } from 'mongoose'
+import { Model, Types } from 'mongoose'
 
 export type IUserRole = 'user' | 'moderator' | 'admin'
 
 export interface IUser {
+  _id: Types.ObjectId
   firstName: string
   lastName: string
   email: string

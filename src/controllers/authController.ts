@@ -20,6 +20,32 @@ const signToken = (id: string): string => {
   return jwt.sign({ id }, secret, options)
 }
 
+const createAndSendToken = (user: IUser, statusCode: number, res: Response) => {
+  const token = signToken(String(user._id))
+
+  const jwtCookieExpiresInNumber = Number(process.env.JWT_COOKIE_EXPIRES_IN)
+  const nodeEnv = process.env.NODE_ENV
+
+  if (!jwtCookieExpiresInNumber || !nodeEnv)
+    throw new AppError(
+      'Missing JWT configuration in environment variables',
+      500,
+    )
+
+  res.cookie('jwt', token, {
+    expires: new Date(
+      Date.now() + jwtCookieExpiresInNumber * 24 * 60 * 60 * 1000,
+    ),
+    secure: nodeEnv === 'production',
+    httpOnly: true,
+  })
+
+  res.status(statusCode).json({
+    status: 'success',
+    message: 'User logged in',
+  })
+}
+
 export const signup = catchAsync(async (req: Request, res: Response) => {
   const newUser = await User.create({
     firstName: req.body.firstName,
@@ -53,13 +79,7 @@ export const login = catchAsync(async (req: Request, res: Response) => {
     throw new AppError('Incorrect email or password', 401)
   }
 
-  const token = signToken(String(user._id))
-
-  res.status(200).json({
-    status: 'success',
-    message: 'User logged in',
-    token,
-  })
+  createAndSendToken(user, 201, res)
 })
 
 export const protect = catchAsync(
