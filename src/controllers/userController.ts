@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import User from '../models/userModel'
+import User from '../models/user'
 import catchAsync from '../utils/catchAsync'
 import AppError from '../utils/appError'
 import mongoose from 'mongoose'

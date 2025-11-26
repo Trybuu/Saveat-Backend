@@ -10,6 +10,8 @@ export interface IUser {
   role: IUserRole
   password: string
   confirmPassword?: string
+  pantryAccess: Types.ObjectId[]
+  lastLogin: Date
   accountVerified: boolean
   accountVerifyToken: string
   passwordChangedAt?: Date

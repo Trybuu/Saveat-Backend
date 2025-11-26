@@ -9,7 +9,6 @@ import {
 const router = Router()
 
 router.route('/').get(getAds).post(createAd)
-
 router.route('/:id').get(getAd).patch(updateAd).delete(deleteAd)
 
 export default router

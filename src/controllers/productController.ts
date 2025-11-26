@@ -1,43 +1,29 @@
 import { Request, Response } from 'express'
-import Product from '../models/productModel'
+import Product from '../models/product'
 import catchAsync from '../utils/catchAsync'
 import AppError from '../utils/appError'
+import ApiFeatures from '../utils/apiFeatures'
 
 export const getProducts = catchAsync(async (req: Request, res: Response) => {
-  const [limit, skip] = [Number(req.query.limit), Number(req.query.skip)]
+  const features = new ApiFeatures(Product.find(), req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate()
 
-  const safeLimit = !isNaN(limit) && limit > 0 ? limit : 10
-  const safeSkip = !isNaN(skip) && skip >= 0 ? skip : 0
-
-  const filter: Record<string, any> = {}
-
-  if (req.query.productName) {
-    filter.product_name = { $regex: req.query.productName, $options: 'i' }
-  }
-
-  if (req.query.code) {
-    filter.code = { $regex: req.query.code, $options: 'i' }
-  }
-
-  const [products, total] = await Promise.all([
-    Product.find(filter)
-      .sort({ product_name: 1 })
-      .limit(safeLimit)
-      .skip(safeSkip),
-    Product.countDocuments(filter),
-  ])
+  const products = await features.query
 
   res.status(200).json({
     status: 'success',
     message: `${products.length} products fetched`,
+    pagintation: {
+      page: features.currentPage,
+      limit: features.currentLimit,
+      total: products.length,
+      hasMore: products.length === features.currentLimit,
+    },
     data: {
       products,
-    },
-    pagination: {
-      limit: safeLimit,
-      skip: safeSkip,
-      total,
-      hasMore: safeSkip + safeLimit < total,
     },
   })
 })

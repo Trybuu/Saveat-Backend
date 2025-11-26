@@ -1,7 +1,7 @@
-import mongoose from 'mongoose'
+import mongoose, { Schema } from 'mongoose'
 import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
-import { IUser, IUserMethods, UserModel } from '../types/user'
+import { IUser, IUserMethods, UserModel } from '../types/mongoose/user'
 
 const userSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>({
   firstName: {
@@ -38,6 +38,11 @@ const userSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>({
       message: 'Passwords are not the same!',
     },
   },
+  pantryAccess: {
+    type: [Schema.Types.ObjectId],
+    default: [],
+  },
+  lastLogin: Date,
   accountVerified: {
     type: Boolean,
   },

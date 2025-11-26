@@ -1,43 +1,14 @@
-import { Request, Response } from 'express'
+import {
+  createOne,
+  deleteOne,
+  getAll,
+  getOne,
+  updateOne,
+} from './handlerFactory'
+import Ad from '../models/ad'
 
-export const getAds = (req: Request, res: Response) => {
-  res.status(200).json({
-    status: 'success',
-    message: 'Ads fetched',
-    data: '<Ads DATA>',
-  })
-}
-
-export const getAd = (req: Request, res: Response) => {
-  res.status(200).json({
-    status: 'success',
-    message: 'Ad fetched',
-    data: '<Ad DATA>',
-  })
-}
-
-export const createAd = (req: Request, res: Response) => {
-  // Middleware który sprawdza dane
-
-  res.status(201).json({
-    status: 'success',
-    message: 'Ad added',
-    data: '<Ad DATA>',
-  })
-}
-
-export const updateAd = (req: Request, res: Response) => {
-  res.status(200).json({
-    status: 'success',
-    message: 'Ad updated',
-    data: '<UPDATED Ad DATA',
-  })
-}
-
-export const deleteAd = (req: Request, res: Response) => {
-  res.status(204).json({
-    status: 'success',
-    message: 'Ad deleted',
-    data: null,
-  })
-}
+export const getAds = getAll(Ad)
+export const getAd = getOne(Ad)
+export const createAd = createOne(Ad)
+export const updateAd = updateOne(Ad)
+export const deleteAd = deleteOne(Ad)

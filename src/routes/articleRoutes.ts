@@ -10,7 +10,6 @@ import {
 const router = Router()
 
 router.route('/').get(getArticles).post(createArticle)
-
 router.route('/:id').get(getArticle).patch(updateArticle).delete(deleteArticle)
 
 export default router

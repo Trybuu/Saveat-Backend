@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from 'express'
 import crypto from 'crypto'
 import jwt, { SignOptions } from 'jsonwebtoken'
-import { IUser, IUserRole } from '../types/user'
+import { IUser, IUserRole } from '../types/mongoose/user'
 import catchAsync from '../utils/catchAsync'
 import AppError from '../utils/appError'
 import { JWTPayload } from '../types/auth'
-import User from '../models/userModel'
+import User from '../models/user'
 import sendEmail from '../utils/email'
 
 const signToken = (id: string): string => {
@@ -42,6 +42,7 @@ const createAndSendToken = (user: IUser, statusCode: number, res: Response) => {
 
   res.status(statusCode).json({
     status: 'success',
+    token,
     message: 'User logged in',
   })
 }

@@ -11,12 +11,13 @@ import globalErrorHandler from './controllers/errorController'
 import userRouter from './routes/userRoutes'
 import productRouter from './routes/productRoutes'
 import pantryRouter from './routes/pantryRoutes'
-import foodSupplyRouter from './routes/foodSupplyRoutes'
 import shoppingListRouter from './routes/shoppingListRoutes'
-import statRouter from './routes/statRoutes'
+import statRouter from './routes/wasteTrackingRoutes'
 import recipeRouter from './routes/recipeRoutes'
 import articleRouter from './routes/articleRoutes'
 import adRouter from './routes/adRoutes'
+import appEventRouter from './routes/appEventRoutes'
+import adEventRouter from './routes/adEventRoutes'
 
 const limiter = rateLimit({
   max: 100,
@@ -29,7 +30,7 @@ const app = express()
 app.use(helmet())
 app.use(express.json({ limit: '10kb' }))
 
-app.use(mongoSanitize())
+// app.use(mongoSanitize()) <-- ten middleware powoduje problem (znaleźć rozzwiązanie sanityzacji danych)
 app.use(xss())
 app.use(
   hpp({
@@ -41,12 +42,13 @@ app.use('/api', limiter)
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/products', productRouter)
 app.use('/api/v1/pantries', pantryRouter)
-app.use('/api/v1/foodSupplies', foodSupplyRouter)
 app.use('/api/v1/shoppingLists', shoppingListRouter)
-app.use('/api/v1/recipes', recipeRouter)
+app.use('/api/v1/wasteTracking', statRouter)
 app.use('/api/v1/articles', articleRouter)
+app.use('/api/v1/recipes', recipeRouter)
 app.use('/api/v1/ads', adRouter)
-app.use('/api/v1/stats', statRouter)
+app.use('/api/v1/adEvents', adEventRouter)
+app.use('/api/v1/appEvents', appEventRouter)
 
 const port = config.port
 

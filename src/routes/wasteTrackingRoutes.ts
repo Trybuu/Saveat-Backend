@@ -5,12 +5,11 @@ import {
   getStat,
   updateStat,
   deleteStat,
-} from '../controllers/statController'
+} from '../controllers/wasteTrackingController'
 
 const router = Router()
 
 router.route('/').get(getStats).post(createStat)
-
 router.route('/:id').get(getStat).patch(updateStat).delete(deleteStat)
 
 export default router
