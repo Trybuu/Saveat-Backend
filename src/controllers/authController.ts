@@ -83,6 +83,15 @@ export const login = catchAsync(async (req: Request, res: Response) => {
   createAndSendToken(user, 201, res)
 })
 
+export const logout = catchAsync(async (req: Request, res: Response) => {
+  res.cookie('jwt', 'loggedout', {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+  })
+
+  res.status(200).json({ status: 'success' })
+})
+
 export const protect = catchAsync(
   async (
     req: Request & { user?: IUser },
