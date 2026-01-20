@@ -10,6 +10,7 @@ interface IPantry {
 
 interface ISupply {
   productId: Types.ObjectId
+  name: String
   quantityValue: number
   quantityUnit: string
   creationDate: Date

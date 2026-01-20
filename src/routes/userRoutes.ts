@@ -15,6 +15,10 @@ import {
   restrictTo,
   logout,
 } from '../controllers/authController'
+import {
+  createUserPantry,
+  getUserPantries,
+} from '../controllers/pantryController'
 
 const router = Router()
 
@@ -26,6 +30,11 @@ router.post('/forgotPassword', forgotPassword)
 router.patch('/resetPassword/:token', resetPassword)
 
 router.delete('/deleteMe', protect, deleteMe)
+
+router
+  .route('/pantry')
+  .get(protect, restrictTo('user', 'admin', 'moderator'), getUserPantries)
+  .post(protect, restrictTo('user', 'admin', 'moderator'), createUserPantry)
 
 router
   .route('/')

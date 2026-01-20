@@ -1,7 +1,6 @@
 import { Model, Types } from 'mongoose'
 
 export type IUserRole = 'user' | 'moderator' | 'admin'
-
 export interface IUser {
   _id: Types.ObjectId
   firstName: string
@@ -20,6 +19,16 @@ export interface IUser {
   active: boolean
 }
 
+export interface IUserInReq {
+  _id: Types.ObjectId
+  firstName: string
+  lastName: string
+  email: string
+  role: IUserRole
+  pantryAccess: Types.ObjectId[]
+  accountVerified: boolean
+  active: boolean
+}
 export interface IUserMethods {
   correctPassword(
     candidatePassword: string,

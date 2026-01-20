@@ -42,8 +42,11 @@ const createAndSendToken = (user: IUser, statusCode: number, res: Response) => {
 
   res.status(statusCode).json({
     status: 'success',
-    token,
     message: 'User logged in',
+    data: {
+      userId: user._id,
+      token,
+    },
   })
 }
 
