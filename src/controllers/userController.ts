@@ -9,9 +9,14 @@ export const getUsers = catchAsync(async (req: Request, res: Response) => {
   const safeLimit = !isNaN(limit) && limit > 0 ? limit : 10
   const safeSkip = !isNaN(skip) && skip >= 0 ? skip : 0
 
-  const users = await User.find().limit(safeLimit).skip(safeSkip)
+  const includeInactive = req.query.includeInactive === 'true'
 
-  const total = await User.countDocuments()
+  const users = await User.find({}, null, { includeInactive })
+    .sort({ createdAt: -1 })
+    .skip(safeSkip)
+    .limit(safeLimit)
+
+  const total = await User.countDocuments({}, { includeInactive })
 
   res.status(200).json({
     status: 'success',
@@ -85,6 +90,16 @@ export const deleteUser = catchAsync(async (req: Request, res: Response) => {
   res.status(204).json({
     status: 'success',
     message: 'User deleted',
+  })
+})
+
+export const getMe = catchAsync(async (req: any, res: Response) => {
+  const user = await User.findById(req.user.id)
+
+  res.status(200).json({
+    status: 'success',
+    message: 'User data fetched',
+    data: user,
   })
 })
 

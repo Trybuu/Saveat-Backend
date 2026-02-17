@@ -36,6 +36,7 @@ export interface IUserMethods {
   ): Promise<boolean>
   changedPasswordAfter(JWTTimestamp: number): boolean
   createPasswordResetToken(): string
+  createPasswordResetCode(): string
 }
 
 export type UserModel = Model<IUser, IUserMethods>

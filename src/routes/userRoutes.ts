@@ -4,6 +4,7 @@ import {
   getUser,
   updateUser,
   deleteUser,
+  getMe,
   deleteMe,
 } from '../controllers/userController'
 import {
@@ -14,6 +15,7 @@ import {
   protect,
   restrictTo,
   logout,
+  verifyAccount,
 } from '../controllers/authController'
 import {
   createUserPantry,
@@ -26,9 +28,12 @@ router.post('/signup', signup)
 router.post('/login', login)
 router.get('/logout', logout)
 
-router.post('/forgotPassword', forgotPassword)
-router.patch('/resetPassword/:token', resetPassword)
+router.get('/verify/:token', verifyAccount)
 
+router.post('/forgotPassword', forgotPassword)
+router.patch('/resetPassword', resetPassword)
+
+router.get('/me', protect, getMe)
 router.delete('/deleteMe', protect, deleteMe)
 
 router

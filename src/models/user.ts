@@ -17,6 +17,7 @@ const userSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>({
   email: {
     type: String,
     required: [true, 'User email is required.'],
+    lowercase: true,
     unique: true,
   },
   role: {
@@ -81,6 +82,12 @@ userSchema.pre('save', async function (next) {
 })
 
 userSchema.pre(/^find/, function (this: mongoose.Query<any, any>, next) {
+  const options = this.getOptions()
+
+  if (options.includeInactive) {
+    return next()
+  }
+
   this.where({ active: { $ne: false } })
   next()
 })
@@ -103,6 +110,19 @@ userSchema.methods.changedPasswordAfter = function (
   }
 
   return false
+}
+
+userSchema.methods.createPasswordResetCode = function (): string {
+  const resetCode = Math.floor(100000 + Math.random() * 900000).toString()
+
+  this.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetCode)
+    .digest('hex')
+
+  this.passwordResetExpires = new Date(Date.now() + 15 * 60 * 1000)
+
+  return resetCode
 }
 
 userSchema.methods.createPasswordResetToken = function (): string {
